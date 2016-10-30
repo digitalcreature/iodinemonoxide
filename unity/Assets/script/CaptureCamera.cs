@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 
 public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 
@@ -29,19 +30,34 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 		MoleculeManager molecule = MoleculeManager.instance;
 		transform.position = molecule.center - Vector3.forward * (molecule.boundingRadius + 50);
 		cam.orthographicSize = Mathf.Max(molecule.boundingRadius + padding, minRadius);
-		SavePNG("screenshot.png");
+		StartCoroutine(PostScreenshot(1));
 	}
 
-	public void SavePNG(string fname) {
+	public System.Collections.IEnumerator PostScreenshot(int user) {
+		string url = "https://still-thicket-59143.herokuapp.com/";
+		byte[] png = RenderPNG();
+		string base64 = System.Convert.ToBase64String(png);
+		Debug.Log(base64);
+		WWWForm form = new WWWForm();
+		form.AddField("name_field", "name");
+		form.AddField("finished_field", "true");
+		form.AddField("image", base64);
+		WWW xhr = new WWW(url + "update/" + user, form);
+		yield return xhr;
+		foreach (KeyValuePair<string, string> entry in xhr.responseHeaders) {
+			Debug.Log(entry.Value + "=" + entry.Key);
+		}
+	}
+
+	public byte[] RenderPNG() {
 		RenderTexture current = RenderTexture.active;
 		RenderTexture.active = tex;
 		cam.Render();
 		Texture2D img = new Texture2D(tex.width, tex.height, TextureFormat.RGB24, false);
 		img.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0, false);
 		img.Apply();
-		byte[] png = img.EncodeToPNG();
-		File.WriteAllBytes(fname, png);
 		RenderTexture.active = current;
+		return img.EncodeToPNG();
 	}
 
 }
