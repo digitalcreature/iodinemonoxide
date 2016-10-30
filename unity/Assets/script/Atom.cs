@@ -35,7 +35,7 @@ public class Atom : MonoBehaviour {
 				if (bondCount >= element.maxBonds) {
 					break;
 				}
-				else if (atom != this) {
+				else {
 					if (Bond.CanBond(this, atom, bondCount)) {
 						Vector3 posA = atom.transform.position;
 						Vector3 posB = transform.position;
@@ -83,8 +83,8 @@ public class Atom : MonoBehaviour {
 		pos = molecule.transform.InverseTransformPoint(pos);
 		if (cursor.position.y < binHeight) {
 			Debug.Log("dropped in bin");
-			atoms.Remove(this);
 			Destroy(gameObject);
+			return;
 		}
 		else {
 			int newBonds = 0;
@@ -93,12 +93,13 @@ public class Atom : MonoBehaviour {
 				newBonds ++;
 			}
 			if (newBonds == 0) {
-				if (atoms.Count > 1) {
+				if (atoms.Count > 0) {
 					Debug.LogFormat("there are {0} atoms", atoms.Count);
-					atoms.Remove(this);
 					Destroy(gameObject);
+					return;
 				}
 			}
 		}
+		molecule.AddAtom(this);
 	}
 }

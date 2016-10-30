@@ -21,6 +21,8 @@ public class Bond : MonoBehaviour {
 	public Bond CreateNew(Atom a, Atom b) {
 		if (CanBond(a, b)) {
 			Bond bond = Instantiate(this);
+			bond.a = a;
+			bond.b = b;
 			a.bonds[bond] = b;
 			b.bonds[bond] = a;
 			bond.name = name;
@@ -36,6 +38,12 @@ public class Bond : MonoBehaviour {
 		else {
 			return null;
 		}
+	}
+
+	public void Break() {
+		a.bonds.Remove(this);
+		b.bonds.Remove(this);
+		Destroy(gameObject);
 	}
 
 }

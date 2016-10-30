@@ -16,13 +16,40 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 		atoms = new HashSet<Atom>();
 	}
 
+	public Vector3 center { get; private set; }
+	public float boundingRadius { get; private set; }
+
+	public void AddAtom(Atom newAtom) {
+		atoms.Add(newAtom);
+		center = Vector3.zero;
+		Bounds bounds = new Bounds();
+		int i = 0;
+		foreach (Atom atom in atoms) {
+			if (i == 0) {
+				bounds.center = atom.transform.position;
+			}
+			else {
+				bounds.Encapsulate(atom.transform.position);
+			}
+			i ++;
+		}
+		center = bounds.center;
+		boundingRadius = 0;
+		foreach (Atom atom in atoms) {
+			float sqrRadius = (atom.transform.position - center).sqrMagnitude;
+			if (sqrRadius > boundingRadius) {
+				boundingRadius = sqrRadius;
+			}
+		}
+		boundingRadius = Mathf.Sqrt(boundingRadius);
+	}
+
 	public void OnFrame(HashSet<HandCursor> activeCursors) {
 		foreach (HandCursor cursor in activeCursors) {
 			if (cursor.isPinching) {
 				if (!cursor.wasPinching) {
 					if (cursor.position.y < binHeight) {
 						Atom atom = atomPrefab.CreateNew(binElement);
-						atoms.Add(atom);
 						cursor.Grab(atom);
 					}
 				}
@@ -34,6 +61,10 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 				cursor.Release();
 			}
 		}
+	}
+
+	void OnDrawGizmos() {
+		Gizmos.DrawWireSphere(center, boundingRadius);
 	}
 
 }
