@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bond : MonoBehaviour {
+public class Bond : Manipulable {
 
 	public float lengthScale = 0.5f;
 

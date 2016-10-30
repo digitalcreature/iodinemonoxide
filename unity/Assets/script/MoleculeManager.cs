@@ -47,6 +47,9 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 	}
 
 	public void OnFrame(HashSet<HandCursor> activeCursors) {
+		foreach (Atom atom in atoms) {
+			atom.outlineThickness = 0;
+		}
 		foreach (HandCursor cursor in activeCursors) {
 			if (cursor.isPinching) {
 				if (!cursor.wasPinching) {

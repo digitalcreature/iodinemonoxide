@@ -29,7 +29,7 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 	public void Refocus() {
 		MoleculeManager molecule = MoleculeManager.instance;
 		distanceTarget = -((molecule.boundingRadius + focusMargin)
-			 / Mathf.Tan(Mathf.Deg2Rad * cam.fieldOfView)) * distanceFactor;
+			 / Mathf.Sin(Mathf.Deg2Rad * cam.fieldOfView / 2));
 		focusTarget = molecule.center;
 	}
 

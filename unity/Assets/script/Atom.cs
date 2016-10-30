@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Atom : MonoBehaviour {
+public class Atom : Manipulable {
 
 	public float scale = 1;
 
@@ -50,10 +50,9 @@ public class Atom : MonoBehaviour {
 		}
 	}
 
-	private Renderer render;
 
-	void Awake() {
-		render = GetComponent<Renderer>();
+	protected override void Awake() {
+		base.Awake();
 		bonds = new Dictionary<Bond, Atom>();
 	}
 
@@ -66,7 +65,8 @@ public class Atom : MonoBehaviour {
 	public void OnFrame() {
 		MoleculeManager molecule = MoleculeManager.instance;
 		foreach (Atom atom in potentialBonds) {
-			Debug.DrawLine(transform.position, atom.transform.position);
+			atom.outlineThickness = 0.1f;
+			atom.outlineColor = Color.blue;
 		}
 	}
 
@@ -78,24 +78,17 @@ public class Atom : MonoBehaviour {
 		grabbingCursor = null;
 		MoleculeManager molecule = MoleculeManager.instance;
 		HashSet<Atom> atoms = molecule.atoms;
-		float binHeight = molecule.binHeight;
 		Vector3 pos = transform.position;
 		pos = molecule.transform.InverseTransformPoint(pos);
-		if (cursor.position.y < binHeight) {
-			Destroy(gameObject);
-			return;
+		int newBonds = 0;
+		foreach (Atom atom in potentialBonds) {
+			molecule.bondPrefab.CreateNew(this, atom);
+			newBonds ++;
 		}
-		else {
-			int newBonds = 0;
-			foreach (Atom atom in potentialBonds) {
-				molecule.bondPrefab.CreateNew(this, atom);
-				newBonds ++;
-			}
-			if (newBonds == 0) {
-				if (atoms.Count > 0) {
-					Destroy(gameObject);
-					return;
-				}
+		if (newBonds == 0) {
+			if (atoms.Count > 0) {
+				Destroy(gameObject);
+				return;
 			}
 		}
 		molecule.AddAtom(this);
