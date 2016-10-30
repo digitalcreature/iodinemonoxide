@@ -74,7 +74,17 @@ def poll():
 	while True:
 	    time.sleep(0.5)
 	    if cache.get('key') != key:
-	        return "CHANGE"
+	        name1=cache.get('name1')
+			finished1=cache.get('finished1')
+			image1=cache.get('image1')
+
+			name2=cache.get('name2')
+			finished2=cache.get('finished2')
+			image2=cache.get('image2')
+
+			key = cache.get('key')
+
+			return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
 
 
 def randomword(length):
