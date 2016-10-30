@@ -3,6 +3,7 @@
 
 # Imports the Flask wrapper, abort function and request context
 from flask import Flask, abort, request, render_template
+from flask_socketio import SocketIO
 
 from werkzeug.contrib.cache import SimpleCache
 
@@ -16,7 +17,8 @@ import base64
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
-
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 
 #This is a function decorator, it basically is a middleware that attaches the function hello to the flask gateway
@@ -43,6 +45,7 @@ def hello():
 	cache.set('finished1', finished)
 	cache.set('image1', image)
 
+	socketio.emit('newData', {'name1': name, 'finished1': name, 'image1': name}, broadcast=True)
 	return "Success"
 
 
@@ -57,6 +60,7 @@ def hello2():
 	cache.set('finished2', finished)
 	cache.set('image2', image)
 
+	socketio.emit('newData', {'name2': name, 'finished2': name, 'image2': name}, broadcast=True)
 	return "Success"
 
 # Ridiculously simplistic running mechanism
