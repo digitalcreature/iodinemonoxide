@@ -17,7 +17,6 @@ import base64
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
-app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
@@ -45,7 +44,15 @@ def hello():
 	cache.set('finished1', finished)
 	cache.set('image1', image)
 
-	socketio.emit('newData', {'name1': name, 'finished1': name, 'image1': name}, broadcast=True)
+	name1=cache.get('name1')
+	finished1=cache.get('finished1')
+	image1=cache.get('image1')
+
+	name2=cache.get('name2')
+	finished2=cache.get('finished2')
+	image2=cache.get('image2')
+
+	socketio.emit('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2}, broadcast=True)
 	return "Success"
 
 
@@ -60,7 +67,15 @@ def hello2():
 	cache.set('finished2', finished)
 	cache.set('image2', image)
 
-	socketio.emit('newData', {'name2': name, 'finished2': name, 'image2': name}, broadcast=True)
+	name1=cache.get('name1')
+	finished1=cache.get('finished1')
+	image1=cache.get('image1')
+
+	name2=cache.get('name2')
+	finished2=cache.get('finished2')
+	image2=cache.get('image2')
+
+	socketio.emit('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2}, broadcast=True)
 	return "Success"
 
 # Ridiculously simplistic running mechanism

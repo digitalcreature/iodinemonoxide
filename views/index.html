@@ -64,7 +64,7 @@
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
-  var socket = io();
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
   socket.on('newData', function(update) {
      $('name1').text(update['name1']);
      $('name2').text(update['name2']);
