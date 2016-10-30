@@ -4,6 +4,7 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 
 	public int imageWidth = 360;
 	public int imageHeight = 360;
+	public float minRadius = 3;
 	public float padding = 10;
 	public Shader shader;
 
@@ -23,7 +24,7 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 	public void OnMoleculeChange() {
 		MoleculeManager molecule = MoleculeManager.instance;
 		transform.position = molecule.center - Vector3.forward * (molecule.boundingRadius + 50);
-		cam.orthographicSize = molecule.boundingRadius + padding;
+		cam.orthographicSize = Mathf.Max(molecule.boundingRadius + padding, minRadius);
 	}
 
 }

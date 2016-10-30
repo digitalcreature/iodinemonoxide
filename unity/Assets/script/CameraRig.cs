@@ -4,8 +4,7 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 
 	public float focusSmoothing = 10;
 	public float focusMargin = 5;
-	public float distanceFactor = 1.5f;
-	Vector2 look;
+	public float minFocusRadius = 3;
 
 	Vector3 focusTarget;
 	float distanceTarget;
@@ -28,7 +27,8 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 
 	public void Refocus() {
 		MoleculeManager molecule = MoleculeManager.instance;
-		distanceTarget = -((molecule.boundingRadius + focusMargin)
+		float focusRadius = Mathf.Max(molecule.boundingRadius + focusMargin, minFocusRadius);
+		distanceTarget = -(focusRadius
 			 / Mathf.Sin(Mathf.Deg2Rad * cam.fieldOfView / 2));
 		focusTarget = molecule.center;
 	}
