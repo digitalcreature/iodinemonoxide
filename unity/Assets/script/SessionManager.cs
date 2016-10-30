@@ -29,7 +29,6 @@ public class SessionManager : SingletonBehaviour<SessionManager> {
 		loginScreen.gameObject.SetActive(true);
 		CaptureCamera capture = CaptureCamera.instance;
 		capture.Initialize();
-		capture.PostScreenshot("", userid);
 	}
 
 	public void StartSession() {

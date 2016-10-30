@@ -8,8 +8,16 @@ public class Bond : Manipulable {
 	public Atom b { get; private set; }
 
 	public static bool CanBond(Atom a, Atom b, int aBondCount, int bBondCount) {
-		return (aBondCount < a.element.maxBonds) && (bBondCount < b.element.maxBonds)
-		 && !a.bonds.ContainsValue(b) && !b.bonds.ContainsValue(a);
+		Vector3 aPos = a.transform.position;
+		Vector3 bPos = b.transform.position;
+		float bondDistance = MoleculeManager.instance.bondDistance;
+		if ((aPos - bPos).sqrMagnitude < bondDistance * bondDistance) {
+			return (aBondCount < a.element.maxBonds) && (bBondCount < b.element.maxBonds)
+			 && !a.bonds.ContainsValue(b) && !b.bonds.ContainsValue(a);
+		}
+		else {
+			return false;
+		}
 	}
 	public static bool CanBond(Atom a, Atom b, int aBondCount) {
 		return CanBond(a, b, aBondCount, b.bonds.Count);

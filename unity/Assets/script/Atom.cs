@@ -40,19 +40,13 @@ public class Atom : Manipulable {
 				}
 				else {
 					if (Bond.CanBond(this, atom, bondCount)) {
-						Vector3 posA = atom.transform.position;
-						Vector3 posB = transform.position;
-						float bondDistance = molecule.bondDistance;
-						if ((posA - posB).sqrMagnitude < bondDistance * bondDistance) {
-							bondCount ++;
-							yield return atom;
-						}
+						bondCount ++;
+						yield return atom;
 					}
 				}
 			}
 		}
 	}
-
 
 	private SphereCollider hull;
 
