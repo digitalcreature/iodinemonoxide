@@ -75,10 +75,10 @@ function poll() {
 
   $.ajax({
       url:"/poll",
-      timeout: 600000,
+      timeout: 6000,
       success: function(update) {
         $('#row').html(update);
-        poll();
+        poll().delay(600000);
       },
       error: function(jqXHR, textStatus, errorThrown) {
           console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
