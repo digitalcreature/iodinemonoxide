@@ -4,6 +4,7 @@
 # Imports the Flask wrapper, abort function and request context
 from flask import Flask, abort, request, render_template
 import random, string, time
+import logging
 
 from werkzeug.contrib.cache import SimpleCache
 
@@ -68,6 +69,7 @@ def hello2():
 @app.route('/poll')
 def poll():
 	key = request.args.get("key")
+	logging.info(key)
 
 	while True:
 	    time.sleep(0.5)
