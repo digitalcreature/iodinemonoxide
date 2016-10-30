@@ -43,6 +43,7 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 		}
 		boundingRadius = Mathf.Sqrt(boundingRadius);
 		CameraRig.instance.Refocus();
+		CaptureCamera.instance.OnMoleculeChange();
 	}
 
 	public void OnFrame(HashSet<HandCursor> activeCursors) {

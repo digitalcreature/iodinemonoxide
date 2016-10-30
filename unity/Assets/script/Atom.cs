@@ -82,7 +82,6 @@ public class Atom : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos = molecule.transform.InverseTransformPoint(pos);
 		if (cursor.position.y < binHeight) {
-			Debug.Log("dropped in bin");
 			Destroy(gameObject);
 			return;
 		}
@@ -94,7 +93,6 @@ public class Atom : MonoBehaviour {
 			}
 			if (newBonds == 0) {
 				if (atoms.Count > 0) {
-					Debug.LogFormat("there are {0} atoms", atoms.Count);
 					Destroy(gameObject);
 					return;
 				}
