@@ -21,6 +21,9 @@ public class Bond : Manipulable {
 	public Bond CreateNew(Atom a, Atom b) {
 		if (CanBond(a, b)) {
 			Bond bond = Instantiate(this);
+			MoleculeManager molecule = MoleculeManager.instance;
+			molecule.bonds.Add(bond);
+			bond.transform.parent = molecule.transform;
 			bond.a = a;
 			bond.b = b;
 			a.bonds[bond] = b;
@@ -44,6 +47,7 @@ public class Bond : Manipulable {
 		a.bonds.Remove(this);
 		b.bonds.Remove(this);
 		Destroy(gameObject);
+		MoleculeManager.instance.bonds.Remove(this);
 	}
 
 }

@@ -11,9 +11,11 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 	public float bondDistance = 10;
 
 	public HashSet<Atom> atoms { get; private set; }
+	public HashSet<Bond> bonds { get; private set; }
 
 	void Awake() {
 		atoms = new HashSet<Atom>();
+		bonds = new HashSet<Bond>();
 	}
 
 	public Vector3 center { get; private set; }
@@ -68,7 +70,7 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 		}
 	}
 
-	void OnDrawGizmos() {
+	void OnDrawGizmosSelected() {
 		Gizmos.DrawWireSphere(center, boundingRadius);
 	}
 

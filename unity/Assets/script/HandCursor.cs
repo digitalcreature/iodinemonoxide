@@ -3,11 +3,9 @@ using Leap;
 
 public class HandCursor : MonoBehaviour {
 
-	public Color openColor = Color.white;
-	public Color pinchColor = Color.green;
+	public Gradient pinchColor;
 	public float pinchThreshold = 0.5f;
 	public AnimationCurve pinchScale;
-	public AnimationCurve pinchAlpha;
 	public Transform model;
 
 	public Leap.Hand hand { get; private set; }
@@ -47,21 +45,20 @@ public class HandCursor : MonoBehaviour {
 	public void OnFrame(Leap.Hand hand) {
 		FingerList fingers = hand.Fingers;
 		Vector3 pos = Vector3.zero;
-		// Vector3 pos = hand.PalmPosition.Vec3() / 10;
 		int fingerCount = 0;
 		foreach (Finger finger in fingers) {
 			if ((int) finger.Type < 2) {
 				fingerCount ++;
 				Vector3 tip = finger.TipPosition.Vec3() / 10;
 				pos += tip;
-				for (int i = 0; i < 4; i ++) {
-					Bone bone = finger.Bone((Bone.BoneType) i);
-					Vector3 a = bone.PrevJoint.Vec3() / 10;
-					Vector3 b = bone.NextJoint.Vec3() / 10;
-					a = transform.parent.TransformPoint(a);
-					b = transform.parent.TransformPoint(b);
-					// Debug.DrawLine(a, b);
-				}
+				// for (int i = 0; i < 4; i ++) {
+				// 	Bone bone = finger.Bone((Bone.BoneType) i);
+				// 	Vector3 a = bone.PrevJoint.Vec3() / 10;
+				// 	Vector3 b = bone.NextJoint.Vec3() / 10;
+				// 	a = transform.parent.TransformPoint(a);
+				// 	b = transform.parent.TransformPoint(b);
+				// 	Debug.DrawLine(a, b);
+				// }
 			}
 		}
 		pos /= fingerCount;
@@ -75,12 +72,9 @@ public class HandCursor : MonoBehaviour {
 		this.isPinching = pinch > pinchThreshold;
 		body.position = this.worldPosition;
 		Material mat = render.material;
-		Color color = isPinching ? pinchColor : openColor;
-		color.a = 0.5f;
-		// color.a = pinchAlpha.Evaluate(pinch);
-		mat.color = color;
+		mat.color = pinchColor.Evaluate(pinch);
 		render.material = mat;
-		// model.localScale = Vector3.one * pinchScale.Evaluate(pinch);
+		model.localScale = Vector3.one * pinchScale.Evaluate(pinch);
 	}
 
 	void Update() {
@@ -94,6 +88,9 @@ public class HandCursor : MonoBehaviour {
 		atom.OnGrab(this);
 		grabbedAtom = atom;
 		grabOffset = offset;
+		if (grabbedAtom != null) {
+			render.enabled = false;
+		}
 	}
 	public void Grab(Atom atom) { Grab(atom, Vector3.zero); }
 
@@ -101,7 +98,9 @@ public class HandCursor : MonoBehaviour {
 		if (grabbedAtom != null) {
 			grabbedAtom.OnRelease(this);
 			grabbedAtom = null;
+
 		}
+		render.enabled = true;
 	}
 
 }
