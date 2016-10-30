@@ -80,4 +80,5 @@ def hello2():
 
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=settings.PORT, debug=True)
+	# app.run(host='0.0.0.0', port=settings.PORT, debug=True)
+	socketio.run(app)
