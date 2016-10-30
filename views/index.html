@@ -19,16 +19,16 @@
       <div class="row">
         <div class="col-xs-6 col-md-3">
           <div class="thumbnail">
-            <img src="{{ image1 }}" alt="image">
+            <img id='image1' src="{{ image1 }}" alt="image">
             <div class="caption">
               <div class="container">
                 <div class="row">
-                  <div class="col-xs-10">{{ name1 }}</div>
+                  <div id='name1' class="col-xs-10">{{ name1 }}</div>
                   <div class="col-xs-2">
                     {% if finished1 == 'true' %}
-                    <span class="fa fa-check"></span>
+                    <span id='finished1' class="fa fa-check"></span>
                     {% else %}
-                    <span class="fa fa-times"></span>
+                    <span id='finished1' class="fa fa-times"></span>
                     {% endif %}
                   </div>
                 </div>
@@ -38,16 +38,16 @@
         </div>
         <div class="col-xs-6 col-md-3">
           <div class="thumbnail">
-            <img src="{{ image2 }}" alt="image">
+            <img id='image2' src="{{ image2 }}" alt="image">
             <div class="caption">
               <div class="container">
                 <div class="row">
-                  <div class="col-xs-10">{{ name2 }}</div>
+                  <div id='name2' class="col-xs-10">{{ name2 }}</div>
                   <div class="col-xs-2">
                     {% if finished2 == 'true' %}
-                    <span class="fa fa-check"></span>
+                    <span id='finished2' class="fa fa-check"></span>
                     {% else %}
-                    <span class="fa fa-times"></span>
+                    <span id='finished2' class="fa fa-times"></span>
                     {% endif %}
                   </div>
                 </div>
@@ -65,6 +65,27 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
+  socket.on('newData', function(update) {
+     $('name1').text(update['name1']);  
+     $('name2').text(update['name2']);  
+     $('image1').attr("src", update['image1']);
+     $('image2').attr("src", update['image2']);
+     if(update['finished1'] == True)
+     {
+         $('finished1').toggleClass("fa fa-check");
+     } else
+     {
+         $('finished1').toggleClass("fa fa-times");
+     }
+
+     if(update['finished2'] == True)
+     {
+         $('finished2').toggleClass("fa fa-check");
+     } else
+     {
+         $('finished2').toggleClass("fa fa-times");
+     }
+  });
 </script>
   </body>
 </html>
