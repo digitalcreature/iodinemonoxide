@@ -77,7 +77,10 @@ function poll() {
       url:"/poll",
       timeout: 6000,
       success: function(update) {
-        $('#row').html(update);
+        $('#row').fadeOut(1000, function() {
+            $('#row').html(update);
+        });
+        $('#row').replaceWith(update);
         setTimeout(function () { poll(); }, 6000 );
       },
       error: function(jqXHR, textStatus, errorThrown) {
