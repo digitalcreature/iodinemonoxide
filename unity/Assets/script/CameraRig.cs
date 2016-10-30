@@ -14,6 +14,7 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 	void Awake() {
 		cam = GetComponentInChildren<Camera>();
 		focusTarget = transform.position;
+		distanceTarget = cam.transform.localPosition.z;
 	}
 
 	void Update() {
