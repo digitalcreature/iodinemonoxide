@@ -16,11 +16,22 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 		}
 	}
 
+	private Vector3 initialPosition;
+	private Vector3 initalCameraPosition;
+
 	Camera cam;
 
 	void Awake() {
 		cam = GetComponentInChildren<Camera>();
+		initialPosition = transform.position;
+		initalCameraPosition = cam.transform.localPosition;
+	}
+
+	public void Initialize() {
+		cam = GetComponentInChildren<Camera>();
 		cam.backgroundColor = backgroundColors.Evaluate(Random.value);
+		transform.position = initialPosition;
+		cam.transform.localPosition = initalCameraPosition;
 		focusTarget = transform.position;
 		distanceTarget = cam.transform.localPosition.z;
 	}

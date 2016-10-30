@@ -7,6 +7,7 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 	public float binHeight = 10; // the height of the virtual "bin" of atoms
 	public Element[] binElements;
 	public int binElementIndex = 0;
+	public Canvas editorUI;
 	public Text elementNameText;
 	public Atom atomPrefab;
 	public Bond bondPrefab;
@@ -21,13 +22,27 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 	public HashSet<Atom> atoms { get; private set; }
 	public HashSet<Bond> bonds { get; private set; }
 
-	void Awake() {
-		atoms = new HashSet<Atom>();
-		bonds = new HashSet<Bond>();
-	}
-
 	public Vector3 center { get; private set; }
 	public float boundingRadius { get; private set; }
+
+	public void Initialize() {
+		if (atoms != null) {
+			foreach (Atom atom in atoms) {
+				atom.gameObject.SetActive(false);
+				Destroy(atom.gameObject);
+			}
+		}
+		if (bonds != null) {
+			foreach (Bond bond in bonds) {
+				bond.gameObject.SetActive(false);
+				Destroy(bond.gameObject);
+			}
+		}
+		atoms = new HashSet<Atom>();
+		bonds = new HashSet<Bond>();
+		center = Vector3.zero;
+		boundingRadius = 0;
+	}
 
 	public void AddAtom(Atom newAtom) {
 		atoms.Add(newAtom);
@@ -86,18 +101,6 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 		if (Input.GetKeyDown("right")) {
 			NextElement();
 		}
-	}
-
-	public void Clear() {
-		foreach (Atom atom in atoms) {
-			Destroy(atom.gameObject);
-		}
-		foreach (Bond bond in bonds) {
-			Destroy(bond.gameObject);
-		}
-		atoms.Clear();
-		bonds.Clear();
-		center = Vector3.zero;
 	}
 
 	public void NextElement() {

@@ -13,7 +13,7 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 	private Camera cam;
 	private RenderTexture tex;
 
-	void Awake() {
+	public void Initialize() {
 		cam = GetComponent<Camera>();
 		tex = new RenderTexture(imageWidth, imageHeight, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
 		tex.antiAliasing = 8;
@@ -28,19 +28,24 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 		MoleculeManager molecule = MoleculeManager.instance;
 		transform.position = molecule.center - Vector3.forward * (molecule.boundingRadius + 50);
 		cam.orthographicSize = Mathf.Max(molecule.boundingRadius + padding, minRadius);
-		StartCoroutine(PostScreenshot(1));
+		SessionManager session = SessionManager.instance;
+		PostScreenshot(session.username, session.userid);
 	}
 
-	public System.Collections.IEnumerator PostScreenshot(int user) {
+	public void PostScreenshot(string username, int userid) {
+		StartCoroutine(ScreenShotPostRequest(username, userid));
+	}
+
+	System.Collections.IEnumerator ScreenShotPostRequest(string username, int userid) {
 		string url = "https://still-thicket-59143.herokuapp.com/";
 		byte[] png = RenderPNG();
 		string base64 = System.Convert.ToBase64String(png);
 		Debug.Log(base64);
 		WWWForm form = new WWWForm();
-		form.AddField("name_field", "name");
+		form.AddField("name_field", username);
 		form.AddField("finished_field", "true");
 		form.AddField("image", base64);
-		WWW xhr = new WWW(url + "update/" + user, form);
+		WWW xhr = new WWW(url + "update/" + userid, form);
 		yield return xhr;
 		foreach (KeyValuePair<string, string> entry in xhr.responseHeaders) {
 			Debug.Log(entry.Key + ": " + entry.Value);

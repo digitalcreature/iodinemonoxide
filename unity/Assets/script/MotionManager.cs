@@ -10,18 +10,30 @@ public class MotionManager : SingletonBehaviour<MotionManager> {
 	private HashSet<HandCursor> allCursors;
 	private HashSet<HandCursor> activeCursors;
 
-	void Awake() {
-		controller = new Leap.Controller();
-		allCursors = new HashSet<HandCursor>();
-		activeCursors = new HashSet<HandCursor>();
+	public bool inputEnabled { get; private set; }
+
+	public void Initialize() {
+		if (controller == null) {
+			controller = new Leap.Controller();
+		}
+		if (allCursors == null) {
+			allCursors = new HashSet<HandCursor>();
+		}
+		if (activeCursors == null) {
+			activeCursors = new HashSet<HandCursor>();
+		}
+		SetInputEnabled(false);
 	}
 
-	private Vector3 ConvertVector(Leap.Vector v) {
-		return new Vector3(
-			v.x,
-			v.y,
-			-v.z
-		);
+	public void SetInputEnabled(bool enabled) {
+		inputEnabled = enabled;
+		if (!enabled) {
+			activeCursors.Clear();
+			foreach (HandCursor cursor in allCursors) {
+				Destroy(cursor.gameObject);
+			}
+			allCursors.Clear();
+		}
 	}
 
 	HandCursor GetCursor() {
@@ -47,22 +59,24 @@ public class MotionManager : SingletonBehaviour<MotionManager> {
 	}
 
 	void FixedUpdate() {
-		activeCursors.Clear();
-		Frame frame = controller.Frame();
-		HandList hands = frame.Hands;
-		for (int h = 0; h < hands.Count; h ++) {
-			Hand hand = hands[h];
-			HandCursor cursor = GetCursor();
-			cursor.OnFrame(hand);
-		}
-		//hide all inactive cursors
-		foreach (HandCursor cursor in allCursors) {
-			if (!activeCursors.Contains(cursor)) {
-				cursor.gameObject.SetActive(false);
-				cursor.Release();
+		if (inputEnabled) {
+			activeCursors.Clear();
+			Frame frame = controller.Frame();
+			HandList hands = frame.Hands;
+			for (int h = 0; h < hands.Count; h ++) {
+				Hand hand = hands[h];
+				HandCursor cursor = GetCursor();
+				cursor.OnFrame(hand);
 			}
+			//hide all inactive cursors
+			foreach (HandCursor cursor in allCursors) {
+				if (!activeCursors.Contains(cursor)) {
+					cursor.gameObject.SetActive(false);
+					cursor.Release();
+				}
+			}
+			MoleculeManager.instance.OnFrame(activeCursors);
 		}
-		MoleculeManager.instance.OnFrame(activeCursors);
 	}
 
 }
