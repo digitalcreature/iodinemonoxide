@@ -90,7 +90,7 @@ def save():
 	print(response.text)
 
 
-	return response["data"]["link"]
+	return response.json()["data"]["link"]
 
 
 # Ridiculously simplistic running mechanism
