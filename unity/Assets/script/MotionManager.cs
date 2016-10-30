@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class MotionManager : SingletonBehaviour<MotionManager> {
 
 	public HandCursor cursorPrefab;
+	public float binHeight = 10; // the height of the virtual "bin" of atoms
+	public Element binElement;
+	public Atom atomPrefab;
 
 	private Leap.Controller controller;
 	private HashSet<HandCursor> allCursors;
@@ -14,6 +17,7 @@ public class MotionManager : SingletonBehaviour<MotionManager> {
 		controller = new Leap.Controller();
 		allCursors = new HashSet<HandCursor>();
 		activeCursors = new HashSet<HandCursor>();
+		new GameObject("atom").AddComponent<Atom>();
 	}
 
 	private Vector3 ConvertVector(Leap.Vector v) {
@@ -66,15 +70,13 @@ public class MotionManager : SingletonBehaviour<MotionManager> {
 			}
 		}
 		//process inputs
-		bool dragging = false;
+		bool dragging = false;	//only one cursor can drag at a time (for now)
 		foreach (HandCursor cursor in activeCursors) {
 			if (cursor.isPinching) {
-				if (!dragging) {
-					dragging = true;
-					CameraRig cameraRig = CameraRig.instance;
-					Vector3 start = cursor.lastWorldPosition;
-					Vector3 end = cursor.worldPosition;
-					// cameraRig.Orbit(end, start);
+				if (cursor.position.y < binHeight) {
+					if (!cursor.wasPinching) {
+
+					}
 				}
 			}
 		}
