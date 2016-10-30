@@ -47,8 +47,18 @@ public class SessionManager : SingletonBehaviour<SessionManager> {
 	}
 
 	void Update() {
-		if (sessionIsActive && Input.GetKeyDown("escape")) {
-			EndSession();
+		if (sessionIsActive) {
+			if (Input.GetKeyDown("escape")) {
+				EndSession();
+			}
+		}
+		else {
+			if (Input.GetKeyDown("i")) {
+				userid = 1;
+			}
+			if (Input.GetKeyDown("o")) {
+				userid = 2;
+			}
 		}
 	}
 }
