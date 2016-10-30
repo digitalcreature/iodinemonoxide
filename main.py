@@ -19,7 +19,8 @@ import base64
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
 
 
 #This is a function decorator, it basically is a middleware that attaches the function hello to the flask gateway
