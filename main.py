@@ -80,4 +80,4 @@ def randomword(length):
 
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=settings.PORT, debug=True)
+	app.run(host='0.0.0.0', port=settings.PORT, debug=True, threaded=True)
