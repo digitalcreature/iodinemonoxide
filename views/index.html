@@ -77,7 +77,7 @@ function poll() {
       url:"/poll",
       timeout: 600000,
       success: function(update) {
-        $('row').html(update);
+        $('#row').html(update);
         poll();
       },
       error: function(jqXHR, textStatus, errorThrown) {
