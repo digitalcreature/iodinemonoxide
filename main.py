@@ -32,9 +32,7 @@ def home():
 	finished2=cache.get('finished2')
 	image2=cache.get('image2')
 
-	key = cache.get('key')
-
-	return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
+	return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
 
 @app.route('/update/1', methods=['POST'])
 def hello():
@@ -46,7 +44,6 @@ def hello():
 	cache.set('name1', name)
 	cache.set('finished1', finished)
 	cache.set('image1', image)
-	cache.set('key', randomword(10))
 
 	return "Success"
 
@@ -61,29 +58,21 @@ def hello2():
 	cache.set('name2', name)
 	cache.set('finished2', finished)
 	cache.set('image2', image)
-	cache.set('key', randomword(10))
 
 	return "Success"
 
 
 @app.route('/poll')
 def poll():
-	key = request.args.get("key")
-	logging.info(key)
 
-	while True:
-	    time.sleep(0.5)
-	    if cache.get('key') != key:
+    name1=cache.get('name1')
+	finished1=cache.get('finished1')
+	image1=cache.get('image1')
+	name2=cache.get('name2')
+	finished2=cache.get('finished2')
+	image2=cache.get('image2')
 
-	        name1=cache.get('name1')
-		finished1=cache.get('finished1')
-		image1=cache.get('image1')
-		name2=cache.get('name2')
-		finished2=cache.get('finished2')
-		image2=cache.get('image2')
-		key = cache.get('key')
-
-		return render_template('row.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
+	return render_template('row.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
 
 
 def randomword(length):

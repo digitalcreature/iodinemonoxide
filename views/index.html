@@ -67,41 +67,30 @@
 <script>
 
 
-// $(document).ready(function() {
-//   poll()
-// });
-//
-// function poll() {
-//   queryString = 'key='+$('key').text();
-//   console.log("Performing poll. Key:" + queryString)
-//
-//   $.ajax({
-//       url:"/poll",
-//       data: queryString,
-//       timeout: 600000,
-//       success: function(update) {
-//         $('row').html(update);
-//
-//         poll();
-//
-//       },
-//       error: function(jqXHR, textStatus, errorThrown) {
-//
-//           console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
-//
-//           poll();
-//
-//       }
-//   });
-// }
+$(document).ready(function() {
+  poll()
+});
 
-(function poll(){
-    $.ajax({ url: "/poll", success: function(data){
-        //Update your dashboard gauge
-        // salesGauge.setValue(data.value);
-        $('row').html(data.value);
-    }, dataType: "json", complete: poll, timeout: 30000 });
-})();
+function poll() {
+
+  $.ajax({
+      url:"/poll",
+      data: queryString,
+      timeout: 600000,
+      success: function(update) {
+        $('row').html(update);
+        poll();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
+          poll();
+      }
+  });
+
+});
+}
+
+
 
 </script>
   </body>
