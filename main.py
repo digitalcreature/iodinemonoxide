@@ -3,7 +3,6 @@
 
 # Imports the Flask wrapper, abort function and request context
 from flask import Flask, abort, request, render_template
-from flask_socketio import SocketIO
 
 from werkzeug.contrib.cache import SimpleCache
 
@@ -17,7 +16,7 @@ import base64
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
-socketio = SocketIO(app)
+
 
 
 #This is a function decorator, it basically is a middleware that attaches the function hello to the flask gateway
@@ -44,15 +43,6 @@ def hello():
 	cache.set('finished1', finished)
 	cache.set('image1', image)
 
-	name1=cache.get('name1')
-	finished1=cache.get('finished1')
-	image1=cache.get('image1')
-
-	name2=cache.get('name2')
-	finished2=cache.get('finished2')
-	image2=cache.get('image2')
-
-	socketio.send('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2})
 	return "Success"
 
 
@@ -67,23 +57,9 @@ def hello2():
 	cache.set('finished2', finished)
 	cache.set('image2', image)
 
-	name1=cache.get('name1')
-	finished1=cache.get('finished1')
-	image1=cache.get('image1')
-
-	name2=cache.get('name2')
-	finished2=cache.get('finished2')
-	image2=cache.get('image2')
-
-	socketio.send('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2})
 	return "Success"
 
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
-	# socketio.run(app)
-	# app.run(host='0.0.0.0', port=settings.PORT, debug=True)
-	# wrap Flask application with engineio's middleware
-    app = socketio.Middleware(sio, app)
 
-    # deploy as an eventlet WSGI server
-    eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
+	app.run(host='0.0.0.0', port=settings.PORT, debug=True)
