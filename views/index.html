@@ -68,13 +68,13 @@ function poll() {
 
   $.ajax({
       url:"/poll",
-      timeout: 6000,
+      timeout: 2000,
       success: function(update) {
 
         $('#row').html(update); // this polls terribly. but whatever
         localStorage.clear();
 
-        setTimeout(function () { poll(); }, 6000 );
+        setTimeout(function () { poll(); }, 3000 );
       },
       error: function(jqXHR, textStatus, errorThrown) {
           console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
