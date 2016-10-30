@@ -16,7 +16,7 @@
           <h2>Student Status</h2>
     </div>
     <div class="container">
-      <div class="row">
+      <div id="row" class="row">
         <div class="col-xs-6 col-md-3">
           <div class="thumbnail">
             <img id='image1' src="{{ image1 }}" alt="image">
@@ -80,27 +80,8 @@ function poll() {
       data: queryString,
       timeout: 600000,
       success: function(update) {
-        $('name1').text(update['name1']);
-        $('name2').text(update['name2']);
-        $('image1').attr("src", update['image1']);
-        $('image2').attr("src", update['image2']);
-        if(update['finished1'] == "true")
-        {
-            $('finished1').toggleClass("fa fa-check");
-        } else
-        {
-            $('finished1').toggleClass("fa fa-times");
-        }
-
-        if(update['finished2'] == "true")
-        {
-            $('finished2').toggleClass("fa fa-check");
-        } else
-        {
-            $('finished2').toggleClass("fa fa-times");
-        }
-        $('key').text(update["key"]);
-
+        $('row').html(update);
+        
         poll();
 
       },

@@ -84,7 +84,9 @@ def poll():
 
 			key = cache.get('key')
 
-			return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
+			
+
+			return render_template('row.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
 
 
 def randomword(length):
