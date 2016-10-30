@@ -80,5 +80,10 @@ def hello2():
 
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
-	socketio.run(app)
-	app.run(host='0.0.0.0', port=settings.PORT, debug=True)
+	# socketio.run(app)
+	# app.run(host='0.0.0.0', port=settings.PORT, debug=True)
+	# wrap Flask application with engineio's middleware
+    app = socketio.Middleware(sio, app)
+
+    # deploy as an eventlet WSGI server
+    eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
