@@ -63,27 +63,56 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 
 <script>
-  function(update) {
-     $('name1').text(update['name1']);
-     $('name2').text(update['name2']);
-     $('image1').attr("src", update['image1']);
-     $('image2').attr("src", update['image2']);
-     if(update['finished1'] == True)
-     {
-         $('finished1').toggleClass("fa fa-check");
-     } else
-     {
-         $('finished1').toggleClass("fa fa-times");
-     }
 
-     if(update['finished2'] == True)
-     {
-         $('finished2').toggleClass("fa fa-check");
-     } else
-     {
-         $('finished2').toggleClass("fa fa-times");
-     }
-  }
+$(document).ready(function() {
+  var key = "{{key}}"
+  poll()
+});
+
+function poll() {
+  queryString = 'key='+key;
+  console.log("Performing poll. Key:" + key)
+
+  $.ajax({
+      url:"/poll",
+      data: queryString,
+      timeout: 60000,
+      success: function(update) {
+        $('name1').text(update['name1']);
+        $('name2').text(update['name2']);
+        $('image1').attr("src", update['image1']);
+        $('image2').attr("src", update['image2']);
+        if(update['finished1'] == True)
+        {
+            $('finished1').toggleClass("fa fa-check");
+        } else
+        {
+            $('finished1').toggleClass("fa fa-times");
+        }
+
+        if(update['finished2'] == True)
+        {
+            $('finished2').toggleClass("fa fa-check");
+        } else
+        {
+            $('finished2').toggleClass("fa fa-times");
+        }
+        key = update["key"];
+
+        poll();
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+
+          console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
+
+          poll();
+
+      }
+  });
+}
+
+
 </script>
   </body>
 </html>

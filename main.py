@@ -3,6 +3,7 @@
 
 # Imports the Flask wrapper, abort function and request context
 from flask import Flask, abort, request, render_template
+import random, string, time
 
 from werkzeug.contrib.cache import SimpleCache
 
@@ -30,7 +31,9 @@ def home():
 	finished2=cache.get('finished2')
 	image2=cache.get('image2')
 
-	return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
+	key = cache.get('key')
+
+	return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2, key=key)
 
 @app.route('/update/1', methods=['POST'])
 def hello():
@@ -42,6 +45,7 @@ def hello():
 	cache.set('name1', name)
 	cache.set('finished1', finished)
 	cache.set('image1', image)
+	cache.set('key', randomword(10))
 
 	return "Success"
 
@@ -56,10 +60,24 @@ def hello2():
 	cache.set('name2', name)
 	cache.set('finished2', finished)
 	cache.set('image2', image)
+	cache.set('key', randomword(10))
 
 	return "Success"
 
+
+@app.route('/poll')
+def poll():
+	key = request.args.get("key")
+
+	while True:
+	    time.sleep(0.5)
+	    if cache.get('key') != key:
+	        return "CHANGE"
+
+
+def randomword(length):
+   return ''.join(random.choice(string.lowercase) for i in range(length))
+
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
-
 	app.run(host='0.0.0.0', port=settings.PORT, debug=True)
