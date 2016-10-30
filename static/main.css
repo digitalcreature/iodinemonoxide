@@ -2,3 +2,7 @@
 .thumbnail {
 	min-height: 200px;
 }
+
+.name {
+	font-size: 30px;
+}

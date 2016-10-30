@@ -7,6 +7,7 @@ import random, string, time
 import logging
 
 from werkzeug.contrib.cache import SimpleCache
+from flask.ext.sqlalchemy import SQLAlchemy
 
 #Create a little persistent cache object, just for example's sake
 cache = SimpleCache(default_timeout=0)
