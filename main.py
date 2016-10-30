@@ -64,19 +64,9 @@ def hello2():
 
 @app.route('/poll')
 def poll():
-
-    name1=cache.get('name1')
-	finished1=cache.get('finished1')
-	image1=cache.get('image1')
-	name2=cache.get('name2')
-	finished2=cache.get('finished2')
-	image2=cache.get('image2')
-
-	return render_template('row.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
+	return render_template('row.html', name1=cache.get('name1'), image1=cache.get('image1'), finished1=cache.get('finished1'), name2=cache.get('name2'), image2=cache.get('image2'), finished2=cache.get('finished2'))
 
 
-def randomword(length):
-   return ''.join(random.choice(string.lowercase) for i in range(length))
 
 # Ridiculously simplistic running mechanism
 if __name__ == "__main__":
