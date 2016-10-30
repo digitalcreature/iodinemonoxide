@@ -7,7 +7,7 @@ from flask import Flask, abort, request, render_template
 from werkzeug.contrib.cache import SimpleCache
 
 #Create a little persistent cache object, just for example's sake
-cache = SimpleCache()
+cache = SimpleCache(default_timeout=0)
 
 #Import some helper functions
 import settings
@@ -16,6 +16,7 @@ import base64
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
+
 
 
 #This is a function decorator, it basically is a middleware that attaches the function hello to the flask gateway
@@ -29,7 +30,7 @@ def home():
 	finished2=cache.get('finished2')
 	image2=cache.get('image2')
 
-	return render_template('home.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
+	return render_template('index.html', name1=name1, image1=image1, finished1=finished1, name2=name2, image2=image2, finished2=finished2)
 
 @app.route('/update/1', methods=['POST'])
 def hello():
