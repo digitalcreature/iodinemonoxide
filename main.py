@@ -52,7 +52,7 @@ def hello():
 	finished2=cache.get('finished2')
 	image2=cache.get('image2')
 
-	socketio.emit('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2}, broadcast=True)
+	socketio.send('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2})
 	return "Success"
 
 
@@ -75,7 +75,7 @@ def hello2():
 	finished2=cache.get('finished2')
 	image2=cache.get('image2')
 
-	socketio.emit('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2}, broadcast=True)
+	socketio.send('newData', {'name1': name1, 'finished1': finished1, 'image1': image1, 'name2': name2, 'finished2': finished2, 'image2': image2})
 	return "Success"
 
 # Ridiculously simplistic running mechanism
