@@ -53,10 +53,10 @@ public class SessionManager : SingletonBehaviour<SessionManager> {
 			}
 		}
 		else {
-			if (Input.GetKeyDown("i")) {
+			if (Input.GetKeyDown("1")) {
 				userid = 1;
 			}
-			if (Input.GetKeyDown("o")) {
+			if (Input.GetKeyDown("2")) {
 				userid = 2;
 			}
 		}

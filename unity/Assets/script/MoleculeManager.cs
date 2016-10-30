@@ -84,6 +84,7 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 					}
 				}
 				if (cursor.grabbedAtom != null) {
+					cursor.UpdateGrab();
 					cursor.grabbedAtom.OnFrame();
 				}
 			}

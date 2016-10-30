@@ -77,7 +77,7 @@ public class HandCursor : MonoBehaviour {
 		model.localScale = Vector3.one * pinchScale.Evaluate(pinch);
 	}
 
-	void Update() {
+	public void UpdateGrab() {
 		if (grabbedAtom != null) {
 			grabbedAtom.transform.position = transform.position + grabOffset;
 		}
@@ -98,7 +98,6 @@ public class HandCursor : MonoBehaviour {
 		if (grabbedAtom != null) {
 			grabbedAtom.OnRelease(this);
 			grabbedAtom = null;
-
 		}
 		render.enabled = true;
 	}
