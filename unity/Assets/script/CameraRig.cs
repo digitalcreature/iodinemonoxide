@@ -2,25 +2,35 @@ using UnityEngine;
 
 public class CameraRig : SingletonBehaviour<CameraRig> {
 
+	public float focusSmoothing = 10;
+	public float focusMargin = 5;
+	public float distanceFactor = 1.5f;
 	Vector2 look;
 
+	Vector3 focusTarget;
+	float distanceTarget;
+
+	Camera cam;
+
 	void Awake() {
+		cam = GetComponentInChildren<Camera>();
+		focusTarget = transform.position;
 	}
 
-	void SetLookFromRotation() {
-		Vector3 euler = transform.eulerAngles;
-		look.x = euler.y;
-		look.y = -euler.x;
+	void Update() {
+		Vector3 pos = transform.position;
+		pos = Vector3.Lerp(pos, focusTarget, Time.deltaTime * focusSmoothing);
+		transform.position = pos;
+		Vector3 camPos = cam.transform.localPosition;
+		camPos.z = Mathf.Lerp(camPos.z, distanceTarget, Time.deltaTime * focusSmoothing);
+		cam.transform.localPosition = camPos;
 	}
 
-	void SetRotationFromLook() {
-		look.y = Mathf.Clamp(look.y, -90, 90);
-		transform.rotation = Quaternion.Euler(-look.y, look.x, 0);
-	}
-
-	public void Orbit(Vector3 start, Vector3 end) {
-		Quaternion rot = Quaternion.FromToRotation(start, end);
-		transform.rotation *= rot;
+	public void Refocus() {
+		MoleculeManager molecule = MoleculeManager.instance;
+		distanceTarget = -((molecule.boundingRadius + focusMargin)
+			 / Mathf.Tan(Mathf.Deg2Rad * cam.fieldOfView)) * distanceFactor;
+		focusTarget = molecule.center;
 	}
 
 }
