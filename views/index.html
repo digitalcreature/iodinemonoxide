@@ -79,7 +79,7 @@ function poll() {
   $.ajax({
       url:"/poll",
       data: queryString,
-      timeout: 60000,
+      timeout: 600000,
       success: function(update) {
         $('name1').text(update['name1']);
         $('name2').text(update['name2']);
