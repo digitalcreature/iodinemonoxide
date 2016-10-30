@@ -9,14 +9,12 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 	public float minRadius = 3;
 	public float padding = 10;
 	public Shader shader;
-	public Gradient backgroundColors;
 
 	private Camera cam;
 	private RenderTexture tex;
 
 	void Awake() {
 		cam = GetComponent<Camera>();
-		cam.backgroundColor = backgroundColors.Evaluate(Random.value);
 		tex = new RenderTexture(imageWidth, imageHeight, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
 		tex.antiAliasing = 8;
 		tex.anisoLevel = 0;
@@ -45,13 +43,14 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 		WWW xhr = new WWW(url + "update/" + user, form);
 		yield return xhr;
 		foreach (KeyValuePair<string, string> entry in xhr.responseHeaders) {
-			Debug.Log(entry.Value + "=" + entry.Key);
+			Debug.Log(entry.Key + ": " + entry.Value);
 		}
 	}
 
 	public byte[] RenderPNG() {
 		RenderTexture current = RenderTexture.active;
 		RenderTexture.active = tex;
+		cam.backgroundColor = CameraRig.instance.backgroundColor;
 		cam.Render();
 		Texture2D img = new Texture2D(tex.width, tex.height, TextureFormat.RGB24, false);
 		img.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0, false);

@@ -88,6 +88,18 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 		}
 	}
 
+	public void Clear() {
+		foreach (Atom atom in atoms) {
+			Destroy(atom.gameObject);
+		}
+		foreach (Bond bond in bonds) {
+			Destroy(bond.gameObject);
+		}
+		atoms.Clear();
+		bonds.Clear();
+		center = Vector3.zero;
+	}
+
 	public void NextElement() {
 		binElementIndex = (binElementIndex + 1) % binElements.Length;
 	}

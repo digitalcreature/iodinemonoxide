@@ -5,14 +5,22 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 	public float focusSmoothing = 10;
 	public float focusMargin = 5;
 	public float minFocusRadius = 3;
+	public Gradient backgroundColors;
 
 	Vector3 focusTarget;
 	float distanceTarget;
+
+	public Color backgroundColor {
+		get {
+			return cam.backgroundColor;
+		}
+	}
 
 	Camera cam;
 
 	void Awake() {
 		cam = GetComponentInChildren<Camera>();
+		cam.backgroundColor = backgroundColors.Evaluate(Random.value);
 		focusTarget = transform.position;
 		distanceTarget = cam.transform.localPosition.z;
 	}
