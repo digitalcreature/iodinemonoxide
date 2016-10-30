@@ -5,6 +5,7 @@
 from flask import Flask, abort, request, render_template
 import random, string, time
 import logging
+import datetime
 
 from werkzeug.contrib.cache import SimpleCache
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -15,6 +16,7 @@ cache = SimpleCache(default_timeout=0)
 #Import some helper functions
 import settings
 import base64
+import item
 
 
 # Creates an instance of the flask server using *this* module as its unique identifier
@@ -41,7 +43,6 @@ def hello():
 	name = request.form['name_field']
 	finished = request.form['finished_field']
 	image = request.form['image']
-	userID = request.form['user_id']
 
 	cache.set('name1', name)
 	cache.set('finished1', finished)
@@ -55,7 +56,6 @@ def hello2():
 	name = request.form['name_field']
 	finished = request.form['finished_field']
 	image = request.form['image']
-	userID = request.form['user_id']
 
 	cache.set('name2', name)
 	cache.set('finished2', finished)
@@ -68,6 +68,27 @@ def hello2():
 def poll():
 	return render_template('row.html', name1=cache.get('name1'), image1=cache.get('image1'), finished1=cache.get('finished1'), name2=cache.get('name2'), image2=cache.get('image2'), finished2=cache.get('finished2'))
 
+
+@app.route('/save', methods=['POST'])
+def save():
+	name = request.form['name_field']
+	image = request.form['image']
+
+	item = Item(name, image, datetime.datetime.now())
+
+	db.session.add(item)
+	db.session.commit()
+
+	return "Success"
+
+
+@app.route('/snapshots', methods=['GET'])
+def snapshots():
+
+	allItems = Item.query.all()
+
+
+	return render_template('saves.html', allItems)
 
 
 # Ridiculously simplistic running mechanism
