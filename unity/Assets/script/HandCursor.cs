@@ -9,7 +9,9 @@ public class HandCursor : MonoBehaviour {
 	public AnimationCurve pinchAlpha;
 	public Transform model;
 
-	public Transform grabbedItem { get; private set; }
+	public Leap.Hand hand { get; private set; }
+
+	public Atom grabbedAtom { get; private set; }
 	public Vector3 grabOffset { get; private set; }
 
 	public bool wasPinching { get; private set; }
@@ -31,41 +33,58 @@ public class HandCursor : MonoBehaviour {
 	}
 
 	private Renderer render;
+	private Rigidbody body;
 	private static HandCursor dragging; // the cursoor currently executing a drag, if any
 
 	void Awake() {
 		render = model.GetComponent<Renderer>();
+		body = gameObject.AddComponent<Rigidbody>();
+		body.isKinematic = true;
+		body.interpolation = RigidbodyInterpolation.Interpolate;
 	}
 
-	public void OnFrame(Vector3 position, float pinch, Vector3 delta) {
+	public void OnFrame(Leap.Hand hand) {
+		Vector3 pos = new Vector3 (
+			hand.PalmPosition.x,
+			hand.PalmPosition.y,
+			-hand.PalmPosition.z
+		) / 10;
+		float pinch = hand.PinchStrength;
+
+		this.hand = hand;
 		this.wasPinching = this.isPinching;
 		this.lastPosition = this.position;
-		this.position = position;
+		this.position = pos;
 		this.delta = delta;
 		this.isPinching = pinch > pinchThreshold;
-		transform.localPosition = position;
+		body.position = this.worldPosition;
 		Material mat = render.material;
 		Color color = isPinching ? pinchColor : openColor;
+		color.a = 0.5f;
 		// color.a = pinchAlpha.Evaluate(pinch);
 		mat.color = color;
 		render.material = mat;
 		// model.localScale = Vector3.one * pinchScale.Evaluate(pinch);
-		MotionManager manager = MotionManager.instance;
-		if (isPinching && !wasPinching) {
-			if (position.y < manager.binHeight) {
-				Atom atom = manager.atomPrefab.CreateNew(manager.binElement);
-				grabbedItem = atom.transform;
-				grabOffset = Vector3.zero;
-			}
-		}
-		if (!isPinching && grabbedItem != null) {
-			grabbedItem = null;
-		}
 	}
 
 	void Update() {
-		if (grabbedItem != null) {
-			grabbedItem.transform.position = transform.position + grabOffset;
+		if (grabbedAtom != null) {
+			grabbedAtom.transform.position = transform.position + grabOffset;
+		}
+	}
+
+	public void Grab(Atom atom, Vector3 offset) {
+		Release();
+		atom.OnGrab(this);
+		grabbedAtom = atom;
+		grabOffset = offset;
+	}
+	public void Grab(Atom atom) { Grab(atom, Vector3.zero); }
+
+	public void Release() {
+		if (grabbedAtom != null) {
+			grabbedAtom.OnRelease(this);
+			grabbedAtom = null;
 		}
 	}
 
