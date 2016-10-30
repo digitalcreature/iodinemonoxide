@@ -12,8 +12,7 @@ public class CaptureCamera : SingletonBehaviour<CaptureCamera> {
 
 	void Awake() {
 		cam = GetComponent<Camera>();
-		tex = new RenderTexture(imageWidth, imageHeight, 24);
-		tex.anisoLevel = 0;
+		tex = new RenderTexture(imageWidth, imageHeight, 8);
 		tex.antiAliasing = 8;
 		cam.targetTexture = tex;
 		if (shader != null) {
