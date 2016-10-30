@@ -32,6 +32,26 @@ public class Atom : MonoBehaviour {
 		}
 	}
 
+	public IEnumerable<Atom> potentialBonds {
+		get {
+			MoleculeManager molecule = MoleculeManager.instance;
+			int newBonds = 0;
+			foreach (Atom atom in molecule.atoms) {
+				if (atom != this) {
+					if (((bonds.Count + newBonds) < element.maxBonds) && atom.canBond) {
+						Vector3 posA = atom.transform.position;
+						Vector3 posB = transform.position;
+						float bondDistance = molecule.bondDistance;
+						if ((posA - posB).sqrMagnitude < bondDistance * bondDistance) {
+							newBonds ++;
+							yield return atom;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private Renderer render;
 
 	void Awake() {
@@ -47,17 +67,8 @@ public class Atom : MonoBehaviour {
 
 	public void OnFrame() {
 		MoleculeManager molecule = MoleculeManager.instance;
-		foreach (Atom atom in molecule.atoms) {
-			if (atom != this) {
-				if (canBond && atom.canBond) {
-					Vector3 posA = atom.transform.position;
-					Vector3 posB = transform.position;
-					float bondDistance = molecule.bondDistance;
-					if ((posA - posB).sqrMagnitude < bondDistance * bondDistance) {
-						Debug.DrawLine(posA, posB);
-					}
-				}
-			}
+		foreach (Atom atom in potentialBonds) {
+			Debug.DrawLine(transform.position, atom.transform.position);
 		}
 	}
 
@@ -79,18 +90,9 @@ public class Atom : MonoBehaviour {
 		}
 		else {
 			int newBonds = 0;
-			foreach (Atom atom in atoms) {
-				if (atom != this) {
-					if (canBond && atom.canBond) {
-						Vector3 posA = atom.transform.position;
-						Vector3 posB = transform.position;
-						float bondDistance = molecule.bondDistance;
-						if ((posA - posB).sqrMagnitude < bondDistance * bondDistance) {
-							molecule.bondPrefab.CreateNew(this, atom);
-							newBonds ++;
-						}
-					}
-				}
+			foreach (Atom atom in potentialBonds) {
+				molecule.bondPrefab.CreateNew(this, atom);
+				newBonds ++;
 			}
 			if (newBonds == 0) {
 				if (atoms.Count > 1) {
