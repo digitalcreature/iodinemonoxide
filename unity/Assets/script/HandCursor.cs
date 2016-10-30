@@ -48,11 +48,23 @@ public class HandCursor : MonoBehaviour {
 		FingerList fingers = hand.Fingers;
 		Vector3 pos = Vector3.zero;
 		// Vector3 pos = hand.PalmPosition.Vec3() / 10;
+		int fingerCount = 0;
 		foreach (Finger finger in fingers) {
-			Vector3 tip = finger.TipPosition.Vec3() / 10;
-			pos += tip;
+			if ((int) finger.Type < 2) {
+				fingerCount ++;
+				Vector3 tip = finger.TipPosition.Vec3() / 10;
+				pos += tip;
+				for (int i = 0; i < 4; i ++) {
+					Bone bone = finger.Bone((Bone.BoneType) i);
+					Vector3 a = bone.PrevJoint.Vec3() / 10;
+					Vector3 b = bone.NextJoint.Vec3() / 10;
+					a = transform.parent.TransformPoint(a);
+					b = transform.parent.TransformPoint(b);
+					// Debug.DrawLine(a, b);
+				}
+			}
 		}
-		pos /= fingers.Count;
+		pos /= fingerCount;
 		float pinch = hand.PinchStrength;
 
 		this.hand = hand;

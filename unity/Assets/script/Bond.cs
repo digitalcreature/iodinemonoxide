@@ -7,11 +7,22 @@ public class Bond : MonoBehaviour {
 	public Atom a { get; private set; }
 	public Atom b { get; private set; }
 
+	public static bool CanBond(Atom a, Atom b, int aBondCount, int bBondCount) {
+		return (aBondCount < a.element.maxBonds) && (bBondCount < b.element.maxBonds)
+		 && !a.bonds.ContainsValue(b) && !b.bonds.ContainsValue(a);
+	}
+	public static bool CanBond(Atom a, Atom b, int aBondCount) {
+		return CanBond(a, b, aBondCount, b.bonds.Count);
+	}
+	public static bool CanBond(Atom a, Atom b) {
+		return CanBond(a, b, a.bonds.Count, b.bonds.Count);
+	}
+
 	public Bond CreateNew(Atom a, Atom b) {
-		if (a.canBond && b.canBond) {
+		if (CanBond(a, b)) {
 			Bond bond = Instantiate(this);
-			a.bonds.Add(bond);
-			b.bonds.Add(bond);
+			a.bonds[bond] = b;
+			b.bonds[bond] = a;
 			bond.name = name;
 			Vector3 aPos = a.transform.position;
 			Vector3 bPos = b.transform.position;

@@ -25,25 +25,23 @@ public class Atom : MonoBehaviour {
 
 	public HandCursor grabbingCursor;
 
-	public HashSet<Bond> bonds { get; private set; }
-	public bool canBond {
-		get {
-			return bonds.Count < element.maxBonds;
-		}
-	}
+	public Dictionary<Bond, Atom> bonds { get; private set; }
 
 	public IEnumerable<Atom> potentialBonds {
 		get {
 			MoleculeManager molecule = MoleculeManager.instance;
-			int newBonds = 0;
+			int bondCount = bonds.Count;
 			foreach (Atom atom in molecule.atoms) {
-				if (atom != this) {
-					if (((bonds.Count + newBonds) < element.maxBonds) && atom.canBond) {
+				if (bondCount >= element.maxBonds) {
+					break;
+				}
+				else if (atom != this) {
+					if (Bond.CanBond(this, atom, bondCount)) {
 						Vector3 posA = atom.transform.position;
 						Vector3 posB = transform.position;
 						float bondDistance = molecule.bondDistance;
 						if ((posA - posB).sqrMagnitude < bondDistance * bondDistance) {
-							newBonds ++;
+							bondCount ++;
 							yield return atom;
 						}
 					}
@@ -56,7 +54,7 @@ public class Atom : MonoBehaviour {
 
 	void Awake() {
 		render = GetComponent<Renderer>();
-		bonds = new HashSet<Bond>();
+		bonds = new Dictionary<Bond, Atom>();
 	}
 
 	public Atom CreateNew(Element element) {
