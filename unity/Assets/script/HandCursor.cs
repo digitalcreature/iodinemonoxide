@@ -1,4 +1,5 @@
 using UnityEngine;
+using Leap;
 
 public class HandCursor : MonoBehaviour {
 
@@ -44,11 +45,14 @@ public class HandCursor : MonoBehaviour {
 	}
 
 	public void OnFrame(Leap.Hand hand) {
-		Vector3 pos = new Vector3 (
-			hand.PalmPosition.x,
-			hand.PalmPosition.y,
-			-hand.PalmPosition.z
-		) / 10;
+		FingerList fingers = hand.Fingers;
+		Vector3 pos = Vector3.zero;
+		// Vector3 pos = hand.PalmPosition.Vec3() / 10;
+		foreach (Finger finger in fingers) {
+			Vector3 tip = finger.TipPosition.Vec3() / 10;
+			pos += tip;
+		}
+		pos /= fingers.Count;
 		float pinch = hand.PinchStrength;
 
 		this.hand = hand;

@@ -65,5 +65,17 @@ public class MotionManager : SingletonBehaviour<MotionManager> {
 		MoleculeManager.instance.OnFrame(activeCursors);
 	}
 
+}
+
+
+public static class LeapE {
+
+	public static Vector3 Vec3(this Leap.Vector vec) {
+		return new Vector3(
+			vec.x,
+			vec.y,
+			- vec.z
+		);
+	}
 
 }
