@@ -79,9 +79,18 @@ def save():
 	image = request.form['image']
 
 	url = "https://api.imgur.com/3/image.json"
-	
+	headers = {
+	    'content-type': "multipart/form-data; boundary=---011000010111000001101001",
+	    'authorization': "Client-ID 6851efbe5a89371",
+	    }
+	payload = "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"image\"\r\n\r\n"+image+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"title\"\r\n\r\n"+name+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nCreated with a Leap Motion at HackNC 2017\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"type\"\r\n\r\nbase64\r\n-----011000010111000001101001--"
 
-	return "Success"
+	response = requests.request("POST", url, data=payload, headers=headers)
+
+	print(response.text)
+
+
+	return response["data"]["link"]
 
 
 # Ridiculously simplistic running mechanism
