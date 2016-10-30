@@ -7,58 +7,62 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='css/paper.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
     <script src="https://use.fontawesome.com/3edbda66b7.js"></script>
 
   </head>
 
   <body>
-    <div class="page-header">
-          <h2>Student Status</h2>
+    <div class="container" style="padding-top:3%">
+      <nav class="navbar navbar-dark bg-inverse">
+        <a class="navbar-brand" href="#">Students</a>
+      </nav>
     </div>
     <div class="container">
       <div id="row" class="row">
-        <div class="col-xs-6 col-md-3">
+        <div class="col-xs-12 col-md-4 student">
           <div class="thumbnail">
             <img id='image1' src="{{ image1 }}" alt="image">
             <div class="caption">
-              <div class="container">
-                <div class="row">
-                  <div id='name1' class="col-xs-10">{{ name1 }}</div>
-                  <div class="col-xs-2">
+                <div>
+                  <span id='name1' >{{ name1 }}</span>
                     {% if finished1 == 'true' %}
                     <span id='finished1' class="fa fa-check"></span>
                     {% else %}
                     <span id='finished1' class="fa fa-times"></span>
                     {% endif %}
-                  </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
-        <div class="col-xs-6 col-md-3">
+        <div class="col-xs-12 col-md-4 student">
           <div class="thumbnail">
             <img id='image2' src="{{ image2 }}" alt="image">
             <div class="caption">
-              <div class="container">
-                <div class="row">
-                  <div id='name2' class="col-xs-10">{{ name2 }}</div>
-                  <div class="col-xs-2">
+                <div>
+                  <span id='name2'>{{ name2 }}</span>
                     {% if finished2 == 'true' %}
                     <span id='finished2' class="fa fa-check"></span>
                     {% else %}
                     <span id='finished2' class="fa fa-times"></span>
                     {% endif %}
-                  </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
+        <div class="col-xs-12 col-md-4 student">
+          <div class="thumbnail">
+            <img  src="" alt="image">
+            <div class="caption">
+                <div>
+                  <span  >James</span>
+                    <span  class="fa fa-times"></span>
+                </div>
+            </div>
+          </div>
+
       </div>
     </div>
-
-    <span id="key">{{key}}</span>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
@@ -77,11 +81,10 @@ function poll() {
       url:"/poll",
       timeout: 6000,
       success: function(update) {
-        if ($('#row').html() === update) {
-          console.log("party");
-        } else {
-          $('#row').html(update);
-        }
+
+        $('#row').html(update); // this polls terribly. but whatever
+        localStorage.clear();
+
         setTimeout(function () { poll(); }, 6000 );
       },
       error: function(jqXHR, textStatus, errorThrown) {
@@ -91,7 +94,18 @@ function poll() {
 
 }
 
-
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    var isEscape = false;
+    if ("key" in evt) {
+        isEscape = (evt.key == "Escape" || evt.key == "Esc");
+    } else {
+        isEscape = (evt.keyCode == 27);
+    }
+    if (isEscape) {
+        location.reload();
+    }
+};
 
 
 </script>
