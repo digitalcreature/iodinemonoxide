@@ -32,6 +32,9 @@
                     <span id='finished1' class="fa fa-times"></span>
                     {% endif %}
                 </div>
+                <form action="/save/1">
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                </form>
             </div>
           </div>
         </div>
@@ -47,6 +50,9 @@
                     <span id='finished2' class="fa fa-times"></span>
                     {% endif %}
                 </div>
+                <form action="/save/2">
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                </form>
             </div>
           </div>
         </div>
@@ -95,6 +101,8 @@ document.onkeydown = function(evt) {
         location.reload();
     }
 };
+
+
 
 
 </script>

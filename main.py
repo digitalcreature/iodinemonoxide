@@ -73,10 +73,11 @@ def poll():
 	return render_template('row.html', name1=cache.get('name1'), image1=cache.get('image1'), finished1=cache.get('finished1'), name2=cache.get('name2'), image2=cache.get('image2'), finished2=cache.get('finished2'))
 
 
-@app.route('/save', methods=['POST'])
-def save():
-	name = request.form['name_field']
-	image = request.form['image']
+@app.route('/save/1', methods=['POST'])
+def save1():
+
+	name=cache.get('name1')
+	image=cache.get('image1')
 
 	url = "https://api.imgur.com/3/image.json"
 	headers = {
@@ -86,11 +87,25 @@ def save():
 	payload = "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"image\"\r\n\r\n"+image+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"title\"\r\n\r\n"+name+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nCreated with a Leap Motion at HackNC 2017\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"type\"\r\n\r\nbase64\r\n-----011000010111000001101001--"
 
 	response = requests.request("POST", url, data=payload, headers=headers)
-
 	print(response.text)
+	return redirect(response.json()["data"]["link"], code=302)
 
+@app.route('/save/2', methods=['POST'])
+def save2():
 
-	return response.json()["data"]["link"]
+	name=cache.get('name2')
+	image=cache.get('image2')
+
+	url = "https://api.imgur.com/3/image.json"
+	headers = {
+	    'content-type': "multipart/form-data; boundary=---011000010111000001101001",
+	    'authorization': "Client-ID 6851efbe5a89371",
+	    }
+	payload = "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"image\"\r\n\r\n"+image+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"title\"\r\n\r\n"+name+"\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nCreated with a Leap Motion at HackNC 2017\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"type\"\r\n\r\nbase64\r\n-----011000010111000001101001--"
+
+	response = requests.request("POST", url, data=payload, headers=headers)
+	print(response.text)
+	return redirect(response.json()["data"]["link"], code=302)
 
 
 # Ridiculously simplistic running mechanism
