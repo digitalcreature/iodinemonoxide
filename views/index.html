@@ -73,7 +73,7 @@ $(document).ready(function() {
 });
 
 function poll() {
-  queryString = 'key='+$('id').text();
+  queryString = 'key='+$('key').text();
   console.log("Performing poll. Key:" + queryString)
 
   $.ajax({
