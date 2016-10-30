@@ -78,11 +78,10 @@ function poll() {
       timeout: 6000,
       success: function(update) {
         $('#row').html(update);
-        poll().delay(600000);
+        setTimeout(function () { poll(); }, 6000 );
       },
       error: function(jqXHR, textStatus, errorThrown) {
           console.log(jqXHR.status + "," + textStatus + ", " + errorThrown);
-          poll();
       }
   });
 
