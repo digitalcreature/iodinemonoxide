@@ -75,7 +75,6 @@ function poll() {
 
   $.ajax({
       url:"/poll",
-      data: queryString,
       timeout: 600000,
       success: function(update) {
         $('row').html(update);
