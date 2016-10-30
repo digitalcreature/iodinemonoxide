@@ -4,13 +4,13 @@
 import os
 
 # Imports the Flask wrapper, abort function and request context
-from flask import Flask, abort, request, render_template
+from flask import Flask, abort, request, render_template, session, redirect
 import random, string, time
 import logging
-import datetime
+import requests
 
 from werkzeug.contrib.cache import SimpleCache
-from flask.ext.sqlalchemy import SQLAlchemy
+from imgurpython import ImgurClient
 
 #Create a little persistent cache object, just for example's sake
 cache = SimpleCache(default_timeout=0)
@@ -19,11 +19,14 @@ cache = SimpleCache(default_timeout=0)
 import settings
 import base64
 
+client_id = '6851efbe5a89371'
+client_secret = '5695aadbbf64eb5e5767c9614654763c9e2e0dcd'
+
+client = ImgurClient(client_id, client_secret)
+
 
 # Creates an instance of the flask server using *this* module as its unique identifier
 app = Flask(__name__, template_folder='views')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-db = SQLAlchemy(app)
 
 
 #This is a function decorator, it basically is a middleware that attaches the function hello to the flask gateway
@@ -75,13 +78,10 @@ def save():
 	name = request.form['name_field']
 	image = request.form['image']
 
-	item = Item(name, image, datetime.datetime.now())
-
-	db.session.add(item)
-	db.session.commit()
+	url = "https://api.imgur.com/3/image.json"
+	
 
 	return "Success"
-
 
 
 # Ridiculously simplistic running mechanism
