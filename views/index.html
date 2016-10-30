@@ -66,7 +66,6 @@
 
 <script>
 
-var key = "tmyfjwcmcy"
 
 $(document).ready(function() {
   poll()
@@ -100,9 +99,9 @@ function poll() {
         {
             $('finished2').toggleClass("fa fa-times");
         }
-        $('id').text(update["key"]);
+        $('key').text(update["key"]);
 
-        poll(key);
+        poll();
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
