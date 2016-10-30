@@ -66,10 +66,10 @@
 
 $(document).ready(function() {
   var key = "{{key}}"
-  poll()
+  poll(key)
 });
 
-function poll() {
+function poll(key) {
   queryString = 'key='+key;
   console.log("Performing poll. Key:" + key)
 
@@ -99,7 +99,7 @@ function poll() {
         }
         key = update["key"];
 
-        poll();
+        poll(key);
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
