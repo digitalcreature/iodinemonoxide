@@ -1,12 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 
 	public float binHeight = 10; // the height of the virtual "bin" of atoms
-	public Element binElement;
+	public Element[] binElements;
+	public int binElementIndex = 0;
+	public Text elementNameText;
 	public Atom atomPrefab;
 	public Bond bondPrefab;
+	public Element binElement {
+		get {
+			return binElements[binElementIndex];
+		}
+	}
 
 	public float bondDistance = 10;
 
@@ -67,6 +75,27 @@ public class MoleculeManager : SingletonBehaviour<MoleculeManager> {
 			else {
 				cursor.Release();
 			}
+		}
+	}
+
+	void Update() {
+		elementNameText.text = binElement.name;
+		if (Input.GetKeyDown("left")) {
+			PreviousElement();
+		}
+		if (Input.GetKeyDown("right")) {
+			NextElement();
+		}
+	}
+
+	public void NextElement() {
+		binElementIndex = (binElementIndex + 1) % binElements.Length;
+	}
+
+	public void PreviousElement() {
+		binElementIndex --;
+		while (binElementIndex < 0) {
+			binElementIndex += binElements.Length;
 		}
 	}
 
