@@ -64,6 +64,8 @@ public class HandCursor : MonoBehaviour {
 		pos /= fingerCount;
 		float pinch = hand.PinchStrength;
 
+		pos = hand.PalmPosition.Vec3() / 10;
+
 		this.hand = hand;
 		this.wasPinching = this.isPinching;
 		this.lastPosition = this.position;
@@ -102,4 +104,28 @@ public class HandCursor : MonoBehaviour {
 		render.enabled = true;
 	}
 
+	void OnDrawGizmos() {
+	// 	if (hand.IsValid) {
+	// 		foreach (Finger finger in hand.Fingers) {
+	// 			for (int i = 0; i < 4; i ++) {
+	// 				Bone bone = finger.Bone((Bone.BoneType) i);
+	// 				if (bone.IsValid) {
+	// 					Vector3 a = bone.NextJoint.Vec3() / 10;
+	// 					Vector3 b = bone.PrevJoint.Vec3() / 10;
+	// 					a = transform.parent.TransformPoint(a);
+	// 					b = transform.parent.TransformPoint(b);
+	// 					Gizmos.DrawLine(a, b);
+	// 				}
+	// 			}
+	// 		}
+	// 		Vector3 center = hand.PalmPosition.Vec3() / 10;
+	// 		center = transform.parent.TransformPoint(center);
+	// 		Color color = Gizmos.color;
+	// 		Gizmos.color = Color.red;
+	// 		Gizmos.DrawWireSphere(center, hand.GrabStrength * 5 + 5);
+	// 		Gizmos.color = Color.blue;
+	// 		Gizmos.DrawWireSphere(center, hand.PinchStrength * 5 + 5);
+	// 		Gizmos.color = color;
+	// 	}
+	}
 }
